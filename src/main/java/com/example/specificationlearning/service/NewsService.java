@@ -48,6 +48,7 @@ public class NewsService {
     @Transactional
     public NewsRs updateNews(NewsRq newsRq) {
         News news = newsRepository.findById(newsRq.getId()).orElseThrow(() -> new NotFoundException("Новость с ID " + newsRq.getId() + " не найдена."));
+        news.setDate(Instant.now());
         NewsMapper.INSTANCE.updateNewsFromDto(newsRq, news);
         return NewsMapper.INSTANCE.toDto(news);
     }

@@ -22,6 +22,7 @@ public interface NewsMapper {
     @Mapping(target = "date", ignore = true)
     News toEntity(NewsRq newsRq);
 
+    @Mapping(target = "date", ignore = true)
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void updateNewsFromDto(NewsRq newsRq, @MappingTarget News news);
 }
