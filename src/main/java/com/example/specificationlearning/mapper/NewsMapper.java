@@ -3,9 +3,7 @@ package com.example.specificationlearning.mapper;
 import com.example.specificationlearning.dto.NewsRq;
 import com.example.specificationlearning.dto.NewsRs;
 import com.example.specificationlearning.entity.News;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingConstants;
+import org.mapstruct.*;
 
 import java.util.List;
 
@@ -23,4 +21,7 @@ public interface NewsMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "date", ignore = true)
     News toEntity(NewsRq newsRq);
+
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    void updateNewsFromDto(NewsRq newsRq, @MappingTarget News news);
 }

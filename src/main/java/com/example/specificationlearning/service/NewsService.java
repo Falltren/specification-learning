@@ -8,6 +8,7 @@ import com.example.specificationlearning.mapper.NewsMapper;
 import com.example.specificationlearning.repository.NewsRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.util.List;
@@ -42,5 +43,12 @@ public class NewsService {
             throw new NotFoundException("Новость с ID " + id + " не найдена.");
         }
         newsRepository.deleteById(id);
+    }
+
+    @Transactional
+    public NewsRs updateNews(NewsRq newsRq) {
+        News news = newsRepository.findById(newsRq.getId()).orElseThrow(() -> new NotFoundException("Новость с ID " + newsRq.getId() + " не найдена."));
+        NewsMapper.INSTANCE.updateNewsFromDto(newsRq, news);
+        return NewsMapper.INSTANCE.toDto(news);
     }
 }

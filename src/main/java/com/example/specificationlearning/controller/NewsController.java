@@ -32,10 +32,10 @@ public class NewsController {
         return newsService.createNews(newsRq);
     }
 
-//    @PutMapping
-//    public NewsRs updateNews(){
-//        return
-//    }
+    @PutMapping
+    public NewsRs updateNews(@RequestBody NewsRq newsRq){
+        return newsService.updateNews(newsRq);
+    }
 
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
