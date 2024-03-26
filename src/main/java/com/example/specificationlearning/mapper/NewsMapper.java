@@ -14,15 +14,23 @@ public interface NewsMapper {
 
     NewsMapper INSTANCE = getMapper(NewsMapper.class);
 
+    @Mapping(target = "category", source = "category.title")
     NewsRs toDto(News news);
 
     List<NewsRs> toListDto(List<News> newsList);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "date", ignore = true)
+    @Mapping(target = "category", ignore = true)
     News toEntity(NewsRq newsRq);
 
     @Mapping(target = "date", ignore = true)
+    @Mapping(target = "category", ignore = true)
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void updateNewsFromDto(NewsRq newsRq, @MappingTarget News news);
+
+//    @Named("categoryTitle")
+//    default String categoryTitle(Category category) {
+//        return category.getTitle();
+//    }
 }

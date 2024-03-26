@@ -2,9 +2,11 @@ package com.example.specificationlearning.service;
 
 import com.example.specificationlearning.dto.NewsRq;
 import com.example.specificationlearning.dto.NewsRs;
+import com.example.specificationlearning.entity.Category;
 import com.example.specificationlearning.entity.News;
 import com.example.specificationlearning.exception.NotFoundException;
 import com.example.specificationlearning.mapper.NewsMapper;
+import com.example.specificationlearning.repository.CategoryRepository;
 import com.example.specificationlearning.repository.NewsRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,9 +21,11 @@ import java.util.Optional;
 public class NewsService {
 
     private final NewsRepository newsRepository;
+    private final CategoryRepository categoryRepository;
 
     public NewsRs getNews(Long id) {
-        News news = newsRepository.findById(id).orElseThrow(() -> new NotFoundException("Новость с ID " + id + " не найдена."));
+        News news = newsRepository.findById(id).orElseThrow(
+                () -> new NotFoundException("Новость с ID " + id + " не найдена."));
         return NewsMapper.INSTANCE.toDto(news);
     }
 
@@ -30,9 +34,14 @@ public class NewsService {
         return NewsMapper.INSTANCE.toListDto(newsList);
     }
 
+    @Transactional
     public NewsRs createNews(NewsRq newsRq) {
         News news = NewsMapper.INSTANCE.toEntity(newsRq);
         news.setDate(Instant.now());
+        Category category = new Category();
+        category.setTitle(newsRq.getCategory());
+        news.setCategory(category);
+        categoryRepository.save(category);
         newsRepository.save(news);
         return NewsMapper.INSTANCE.toDto(news);
     }
@@ -47,7 +56,8 @@ public class NewsService {
 
     @Transactional
     public NewsRs updateNews(NewsRq newsRq) {
-        News news = newsRepository.findById(newsRq.getId()).orElseThrow(() -> new NotFoundException("Новость с ID " + newsRq.getId() + " не найдена."));
+        News news = newsRepository.findById(newsRq.getId()).orElseThrow(
+                () -> new NotFoundException("Новость с ID " + newsRq.getId() + " не найдена."));
         news.setDate(Instant.now());
         NewsMapper.INSTANCE.updateNewsFromDto(newsRq, news);
         return NewsMapper.INSTANCE.toDto(news);

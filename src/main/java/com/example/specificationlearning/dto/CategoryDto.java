@@ -3,10 +3,8 @@ package com.example.specificationlearning.dto;
 import lombok.Data;
 
 @Data
-public class NewsRq {
+public class CategoryDto {
 
     private Long id;
     private String title;
-    private String text;
-    private String category;
 }

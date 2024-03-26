@@ -11,4 +11,5 @@ public class NewsRs {
     private String title;
     private String text;
     private Instant date;
+    private String category;
 }
