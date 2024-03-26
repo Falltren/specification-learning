@@ -6,15 +6,15 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
-import java.time.Instant;
+import java.util.List;
 
 @Entity
 @Setter
 @Getter
-@AllArgsConstructor
 @RequiredArgsConstructor
-@Table(name = "news")
-public class News {
+@AllArgsConstructor
+@Table(name = "category")
+public class Category {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,12 +22,6 @@ public class News {
 
     private String title;
 
-    private String text;
-
-    private Instant date;
-
-    @ManyToOne(cascade = CascadeType.REMOVE)
-    @JoinColumn(name = "category_id", referencedColumnName = "id")
-    private Category category;
-
+    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
+    private List<News> news;
 }
