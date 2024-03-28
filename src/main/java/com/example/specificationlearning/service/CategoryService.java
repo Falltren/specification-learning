@@ -2,7 +2,7 @@ package com.example.specificationlearning.service;
 
 import com.example.specificationlearning.dto.CategoryDto;
 import com.example.specificationlearning.entity.Category;
-import com.example.specificationlearning.exception.NotFoundException;
+import com.example.specificationlearning.exception.BadRequestException;
 import com.example.specificationlearning.mapper.CategoryMapper;
 import com.example.specificationlearning.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +20,7 @@ public class CategoryService {
 
     public CategoryDto getCategory(Long id) {
         Category category = categoryRepository.findById(id).orElseThrow(
-                () -> new NotFoundException("Категория с ID " + id + " не найдена."));
+                () -> new BadRequestException(getMessageForException(id)));
         return CategoryMapper.INSTANCE.toDto(category);
     }
 
@@ -48,8 +48,11 @@ public class CategoryService {
 
     @Transactional
     public CategoryDto updateCategory(CategoryDto categoryDto) {
+        if (categoryDto.getId() == null) {
+            throw new BadRequestException("поле ID должно быть заполнено");
+        }
         Category category = categoryRepository.findById(categoryDto.getId()).orElseThrow(
-                () -> new NotFoundException("Категория с ID " + categoryDto.getId() + " не найдена."));
+                () -> new BadRequestException(getMessageForException(categoryDto.getId())));
         CategoryMapper.INSTANCE.updateCategoryFromDto(categoryDto, category);
         return CategoryMapper.INSTANCE.toDto(category);
     }
@@ -57,8 +60,12 @@ public class CategoryService {
     public void deleteCategory(Long id) {
         Optional<Category> categoryOptional = categoryRepository.findById(id);
         if (categoryOptional.isEmpty()) {
-            throw new NotFoundException("Категория с ID " + id + " не найдена.");
+            throw new BadRequestException(getMessageForException(id));
         }
         categoryRepository.deleteById(id);
+    }
+
+    private String getMessageForException(Long id) {
+        return "Категория с ID " + id + " не найдена.";
     }
 }
