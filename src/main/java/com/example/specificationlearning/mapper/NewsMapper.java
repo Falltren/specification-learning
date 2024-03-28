@@ -29,8 +29,4 @@ public interface NewsMapper {
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void updateNewsFromDto(NewsRq newsRq, @MappingTarget News news);
 
-//    @Named("categoryTitle")
-//    default String categoryTitle(Category category) {
-//        return category.getTitle();
-//    }
 }

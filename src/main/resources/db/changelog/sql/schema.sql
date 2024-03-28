@@ -8,7 +8,7 @@ CREATE TABLE public.news (
     title character varying(255),
     text character varying(255),
     date timestamp(6) without time zone,
-    category_id bigserial references categories(id)
+    category_id bigint references categories(id)
 );
 
 

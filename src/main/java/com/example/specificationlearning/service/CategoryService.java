@@ -36,6 +36,16 @@ public class CategoryService {
         return CategoryMapper.INSTANCE.toDto(category);
     }
 
+    public Category getSavedCategory(String categoryTitle) {
+        Optional<Category> categoryOptional = categoryRepository.findByTitle(categoryTitle);
+        if (categoryOptional.isPresent()) {
+            return categoryOptional.get();
+        }
+        Category category = new Category();
+        category.setTitle(categoryTitle);
+        return categoryRepository.save(category);
+    }
+
     @Transactional
     public CategoryDto updateCategory(CategoryDto categoryDto) {
         Category category = categoryRepository.findById(categoryDto.getId()).orElseThrow(
